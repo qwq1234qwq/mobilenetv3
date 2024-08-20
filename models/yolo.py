@@ -3,7 +3,7 @@
 YOLO-specific modules.
 
 Usage:
-    $ python models/yolo.py --cfg yolov5s.yaml
+    $ python models/yolo.py --cfg /home/o/yolov5/models/yolov5_mobilemetv3.yaml
 """
 
 import argparse
@@ -40,6 +40,8 @@ from models.common import (
     Contract,
     Conv,
     CrossConv,
+    MobileNetv3,
+    Conv3BN,
     DetectMultiBackend,
     DWConv,
     DWConvTranspose2d,
@@ -412,6 +414,8 @@ def parse_model(d, ch):
             C3TR,
             C3SPP,
             C3Ghost,
+            MobileNetv3,
+            Conv3BN,
             nn.ConvTranspose2d,
             DWConvTranspose2d,
             C3x,
@@ -439,6 +443,9 @@ def parse_model(d, ch):
             c2 = ch[f] * args[0] ** 2
         elif m is Expand:
             c2 = ch[f] // args[0] ** 2
+        elif m is MobileNetv3:
+            c2=args[0]
+            args=args[1:]
         else:
             c2 = ch[f]
 
@@ -457,7 +464,7 @@ def parse_model(d, ch):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--cfg", type=str, default="yolov5s.yaml", help="model.yaml")
+    parser.add_argument("--cfg", type=str, default="/home/o/yolov5/models/yolov5_mobilemetv3.yaml", help="model.yaml")
     parser.add_argument("--batch-size", type=int, default=1, help="total batch size for all GPUs")
     parser.add_argument("--device", default="", help="cuda device, i.e. 0 or 0,1,2,3 or cpu")
     parser.add_argument("--profile", action="store_true", help="profile model speed")
